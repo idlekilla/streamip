@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamIP – IPTV Player</title>
+    <style>
+        :root {
+            --bg-color: #0b0d0e;
+            --card-bg: #12161a;
+            --accent: #8b0000;
+            --accent-hover: #b30000;
+            --text-main: #f5f7f8;
+            --text-muted: #94a1b2;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .cta-btn svg { margin-left: 10px; margin-right: 0; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+        
+        header { padding: 2rem 0; display: flex; justify-content: space-between; align-items: center; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-logo { width: 45px; height: 45px; object-fit: contain; border-radius: 8px; }
+        .brand-text { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+        
+        .lang-select {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .hero { padding: 3rem 0 4rem 0; text-align: center; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+        .hero-subtitle { font-size: 1.3rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2.5rem auto; }
+        
+        .banner-container {
+            max-width: 900px;
+            margin: 0 auto 2.5rem auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.08);
+            background: #000;
+        }
+        .banner-img { width: 100%; height: auto; display: block; }
+
+        .hero-desc { font-size: 1.05rem; color: var(--text-muted); max-width: 750px; margin: 0 auto 2rem auto; opacity: 0.8; }
+
+        .price-badge {
+            display: block;
+            font-size: 1.1rem;
+            color: #ffc107;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.03em;
+        }
+
+        .cta-container { margin-bottom: 2rem; }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.2s ease;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.4);
+        }
+        .cta-btn:hover { background-color: var(--accent-hover); }
+        .cta-btn svg { margin-right: 10px; fill: currentColor; }
+
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center; }
+
+        /* Showcase Seksjon */
+        .showcase-section { padding: 2rem 0 4rem 0; }
+        .carousel-title { font-size: 1.4rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 600; text-align: left; }
+        body.rtl .carousel-title { text-align: right; }
+
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1.5rem;
+            scrollbar-width: thin;
+        }
+
+        /* TV Format */
+        .tv-track .carousel-item { flex: 0 0 calc(50% - 1rem); min-width: 300px; }
+        .tv-track img { width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); display: block; }
+
+        /* Mobil Format - OPPDATERT til å takle .png */
+        .mobile-track .carousel-item { flex: 0 0 calc(25% - 1rem); min-width: 180px; }
+        .mobile-track img { width: 100%; height: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); display: block; }
+
+        .grid-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; }
+        .info-box { background: var(--card-bg); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.02); }
+        
+        ul { list-style-position: inside; color: var(--text-muted); }
+        li { margin-bottom: 0.75rem; }
+        .disclaimer-box p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem; }
+
+        footer { padding: 5rem 0; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 6rem; }
+        footer p { color: var(--text-muted); font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .grid-split { grid-template-columns: 1fr; gap: 2rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .tv-track .carousel-item { flex: 0 0 85%; }
+            .mobile-track .carousel-item { flex: 0 0 45%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="brand">
+                <img src="StreamIP-logo.jpg" class="brand-logo" alt="StreamIP Logo">
+                <span class="brand-text">StreamIP</span>
+            </div>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="no">Norsk</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="pt">Português</option>
+                <option value="ar">العربية</option>
+            </select>
+        </header>
+
+        <section class="hero">
+            <h1 id="heroTitle">StreamIP – IPTV-spiller</h1>
+            <p class="hero-subtitle" id="heroSubtitle"></p>
+            
+            <div class="banner-container">
+                <img src="StreamIP-butikk.png" class="banner-img" alt="StreamIP Showcase Banner">
+            </div>
+
+            <p class="hero-desc" id="heroDesc"></p>
+            
+            <div class="cta-container">
+                <span class="price-badge" id="priceBadge"></span>
+                <a href="https://play.google.com/store/apps/details?id=com.normannknot.streamip" class="cta-btn" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 20h14v-2H5v2zm7-18L5.33 11h4V16h5.34v-5h4L12 2z"/></svg>
+                    <span id="ctaText"></span>
+                </a>
+            </div>
+        </section>
+
+        <section class="showcase-section">
+            <div class="carousel-group">
+                <h3 class="carousel-title">Google TV & Tablet Layout</h3>
+                <div class="carousel-track tv-track">
+                    <div class="carousel-item"><img src="1000007632.png"></div>
+                    <div class="carousel-item"><img src="1000007626.png"></div>
+                    <div class="carousel-item"><img src="1000007635.png"></div>
+                    <div class="carousel-item"><img src="1000007641.png"></div>
+                    <div class="carousel-item"><img src="1000007621.png"></div>
+                    <div class="carousel-item"><img src="1000007638.png"></div>
+                </div>
+            </div>
+
+            <div class="carousel-group" style="margin-top: 3rem;">
+                <h3 class="carousel-title">Mobile Layout</h3>
+                <div class="carousel-track mobile-track">
+                    <div class="carousel-item"><img src="1000042347.png"></div>
+                    <div class="carousel-item"><img src="1000042362.png"></div>
+                    <div class="carousel-item"><img src="1000042353.png"></div>                    
+                    <div class="carousel-item"><img src="1000042365.png"></div>
+                    <div class="carousel-item"><img src="1000042344.png"></div>
+                    <div class="carousel-item"><img src="1000042350.png"></div>
+                    <div class="carousel-item"><img src="1000042356.png"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-split">
+            <div class="info-box">
+                <h2 class="section-title" id="featuresTitle" style="text-align:start;"></h2>
+                <ul id="featuresList"></ul>
+            </div>
+            <div class="info-box disclaimer-box">
+                <h2 class="section-title" id="importantTitle" style="text-align:start;"></h2>
+                <div id="disclaimerContent"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p id="footerText"></p>
+        </footer>
+    </div>
+
+    <script src="lang.js"></script>
+    <script>
+        function changeLanguage(lang) {
+            const data = translations[lang] || translations['en'];
+            
+            if (data.dir === "rtl") {
+                document.body.classList.add("rtl");
+            } else {
+                document.body.classList.remove("rtl");
+            }
+            
+            document.documentElement.lang = lang;
+
+            document.getElementById("heroTitle").innerText = data.title;
+            document.getElementById("heroSubtitle").innerText = data.subtitle;
+            document.getElementById("heroDesc").innerText = data.description + " " + data.langSupport;
+            document.getElementById("priceBadge").innerText = data.priceTag || translations['en'].priceTag;
+            document.getElementById("ctaText").innerText = data.ctaBtn;
+            document.getElementById("featuresTitle").innerText = data.featuresTitle;
+            document.getElementById("importantTitle").innerText = data.importantTitle;
+            document.getElementById("footerText").innerText = data.footerText;
+
+            const featuresList = document.getElementById("featuresList");
+            featuresList.innerHTML = "";
+            data.features.forEach(f => {
+                const li = document.createElement("li");
+                li.innerText = f;
+                featuresList.appendChild(li);
+            });
+
+            const disclaimerContent = document.getElementById("disclaimerContent");
+            disclaimerContent.innerHTML = "";
+            data.disclaimers.forEach(d => {
+                const p = document.createElement("p");
+                p.innerText = d;
+                disclaimerContent.appendChild(p);
+            });
+        }
+
+        const userLang = navigator.language || navigator.userLanguage;
+        const shortLang = userLang.split('-')[0];
+        const defaultLang = translations[shortLang] ? shortLang : 'en';
+        
+        document.getElementById("langSelect").value = defaultLang;
+        changeLanguage(defaultLang);
+    </script>
+</body>
+</html>
